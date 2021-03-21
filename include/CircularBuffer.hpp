@@ -4,12 +4,12 @@
 // a pretty simple Circular buffer, with a float at its core
 
 class CircularBuffer {
-    int now;
+    int current;
     int length;
     float * buffer;
 
     public:
-    CircularBuffer(float);
+    CircularBuffer(int);
     ~CircularBuffer();
     float now(int offset); // gets the current index + the offset
     void next(float next); // 
