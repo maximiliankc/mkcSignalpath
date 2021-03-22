@@ -16,11 +16,12 @@ CircularBuffer::~CircularBuffer() {
 
 float CircularBuffer::now(int offset){
     int index = current + offset;
-    // if the index is negative, adding the length until it's positive
-    while(index < 0) {
+
+    index %= length;
+    // if index is negative, need to add the length
+    if(index < 0) {
         index += length;
     }
-    index %= length;
     return buffer[index];
 }
 
