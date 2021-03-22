@@ -34,3 +34,25 @@ void CircularBuffer::next(float next){
 int CircularBuffer::get_len(void){
     return length;
 }
+
+void CircularBuffer::extend(int newLength) {
+    float * newBuffer;
+    int i;
+    if(newLength > length) {
+        // only need to extend the buffer if the new length is longer than the existing one
+        // preserves looking back, not forward
+        newBuffer = new float[newLength];
+
+        for(i = 0; i < newLength; i++) {
+            newBuffer[i] = 0.0;
+        }
+        for(i = 0; i > -length; i--) {
+            newBuffer[length + i - 1] = now(i);
+        }
+        
+        current = length - 1;
+        length = newLength;
+        delete[] buffer;
+        buffer = newBuffer;
+    }
+}
