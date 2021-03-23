@@ -8,10 +8,13 @@ class CircularBuffer {
     int current;
     int length;
     float * buffer;
+    bool initialised;
 
     public:
+    CircularBuffer();
     CircularBuffer(int);
     ~CircularBuffer();
+    void init(int);
     float now(int offset); // gets the current index + the offset
     void next(float next); // takes in a new input
     int get_len(void); // length of the buffer
