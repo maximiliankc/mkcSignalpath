@@ -12,6 +12,10 @@ SoundUnit::SoundUnit(CircularBuffer * in, int inChannels, int inLength, int outC
     }
 }
 
+SoundUnit::~SoundUnit() {
+    delete[] y;
+}
+
 CircularBuffer * SoundUnit::get_x(void) {
     return x;
 }

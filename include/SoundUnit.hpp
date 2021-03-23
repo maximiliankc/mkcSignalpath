@@ -14,6 +14,7 @@ class SoundUnit{
 
     public:
     SoundUnit(CircularBuffer * in, int inChannels, int inLength, int outChannels, int outLength);
+    ~SoundUnit();
     virtual void step(void) = 0;
     CircularBuffer * get_x(void);
     CircularBuffer * get_y(void);
