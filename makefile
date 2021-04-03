@@ -4,10 +4,10 @@ CFLAGS=-I$(IDIR) -Werror -Wall
 
 LINK_TARGET=signal
 
-_OBJ = main.o CircularBuffer.o SoundUnit.o
+_OBJ = main.o CircularBuffer.o SoundUnit.o Delay.o
 OBJ = $(patsubst %,$(ODIR)/%,$(_OBJ))
 
-_DEPS = CircularBuffer.hpp SoundUnit.hpp
+_DEPS = CircularBuffer.hpp SoundUnit.hpp Delay.hpp
 DEPS = $(patsubst %,$(IDIR)/%,$(_DEPS))
 
 ODIR=obj

@@ -1,15 +1,29 @@
 #include <iostream>
 #include "CircularBuffer.hpp"
+#include "Delay.hpp"
+
+#define DELAY_TEST_LENGTH 50
+#define TEST_DELAY 15
 
 int test_circ_buf(void);
+int test_delay(void);
 
 int main(int argc, char ** argv) {
 
+    std::cout << "CircularBuffer\n";
     if(test_circ_buf()) {
         std::cout << "FAIL\n";
     } else {
         std::cout << "PASS\n";
     }
+
+    std::cout << "SimpleDelay\n";
+    if(test_delay()) {
+        std::cout <<"FAIL\n";
+    } else {
+        std::cout<<"PASS\n";
+    }
+
     return 0;
 }
 
@@ -57,11 +71,8 @@ int test_circ_buf(void) {
             n = buffer.now(-k);
             if (n != testVector[i][k]) {
                 retval = 1;
-                std::cout << testVector << "|";
             }
-            std::cout << n << " ";
         }
-        std::cout << "\n";
     }
     buffer.extend(8);
     for(; i < 32; i++) {
@@ -70,11 +81,8 @@ int test_circ_buf(void) {
             n = buffer.now(-k);
             if (n != testVector[i][k]) {
                 retval = 1;
-                std::cout << testVector << "|";
             }
-            std::cout << n << " ";
         }
-        std::cout << "\n";
     }
 
     // check that the unitialised state works
@@ -86,4 +94,28 @@ int test_circ_buf(void) {
         retval = 0;
     }
     return retval;
+}
+
+int test_delay(void) {
+    float testVector[DELAY_TEST_LENGTH + TEST_DELAY];
+    float outVector[DELAY_TEST_LENGTH];
+    int i;
+    int delay = TEST_DELAY;
+    int retval = 0;
+    CircularBuffer in(1);
+    SimpleDelay delayUnit(delay, &in);
+    CircularBuffer * out = delayUnit.get_y();
+    for(i = 0; i < TEST_DELAY; i++) {
+        testVector[i] = 0;
+    }
+    for(i = 0; i < DELAY_TEST_LENGTH; i++) {
+        testVector[i+TEST_DELAY] = i;
+        in.next(i);
+        delayUnit.step();
+        outVector[i] = out->now(0);
+    }
+    for(i = 0; i < DELAY_TEST_LENGTH; i++) {
+        retval += (testVector[i] == outVector[i]);
+    }
+    return 0;
 }
