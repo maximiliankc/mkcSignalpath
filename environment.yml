@@ -1,0 +1,9 @@
+name: soundpath
+channels:
+  - defaults
+dependencies:
+  - numpy
+  - scipy
+  - matplotlib
+  - python=3.*
+  - pylint

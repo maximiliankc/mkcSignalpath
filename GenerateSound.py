@@ -1,0 +1,9 @@
+import SoundIo
+
+def main():
+    io = SoundIo.SoundIo()
+    io.sinusoid(duration=0.01)
+    io.display_sound()
+
+if __name__ == "__main__":
+    main()

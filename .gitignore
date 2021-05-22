@@ -1,5 +1,7 @@
 .vscode/
 obj/
 *.o
+*.pyc
 signal
 
+.DS_Store
