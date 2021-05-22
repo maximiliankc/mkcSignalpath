@@ -8,9 +8,12 @@ class CircularBuffer {
     unsigned int current;
     unsigned int length;
     float * buffer;
+    bool initialised;
 
     public:
+    CircularBuffer();
     CircularBuffer(unsigned int _length, float * _buffer);
+    void init(unsigned int _length, float * _buffer);
     float now(unsigned int offset); // gets the current index + the offset
     void next(float next); // takes in a new input
     int get_len(void); // length of the buffer

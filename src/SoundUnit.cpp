@@ -1,13 +1,13 @@
 #include "SoundUnit.hpp"
 
-SoundUnit::SoundUnit(CircularBuffer * in, int inLength, int outLength) {
-    //in->extend(inLength);
-    //x = in;
-    //y = new CircularBuffer(outLength);
+SoundUnit::SoundUnit(unsigned int c, CircularBuffer * in, CircularBuffer * out){
+    channels = c;
+    x = in;
+    y = out;
 }
 
-SoundUnit::~SoundUnit() {
-    // delete y;
+unsigned int SoundUnit::get_channels(void) {
+    return channels;
 }
 
 CircularBuffer * SoundUnit::get_x(void) {

@@ -3,18 +3,16 @@
 
 #include "CircularBuffer.hpp"
 
-//each sound unit "owns" its output (i.e. is responsible for freeing etc.)
-
-// this is a mono unit, will make a 'mult channel' unit eventually
 class SoundUnit{
     protected:
     CircularBuffer * x;
     CircularBuffer * y;
+    unsigned int channels;
 
     public:
-    SoundUnit(CircularBuffer * in, int inLength, int outLength);
-    ~SoundUnit();
+    SoundUnit(unsigned int c, CircularBuffer * in, CircularBuffer * out);
     virtual void step(void) = 0;
+    unsigned int get_channels(void);
     CircularBuffer * get_x(void);
     CircularBuffer * get_y(void);
 };

@@ -7,7 +7,7 @@ class SimpleDelay: public SoundUnit {
     int n;
 
     public:
-    SimpleDelay(int _n, CircularBuffer * in);
+    SimpleDelay(int _n, unsigned int c, CircularBuffer * in, CircularBuffer * out);
     void step(void);
 };
 

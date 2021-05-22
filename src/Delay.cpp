@@ -1,9 +1,13 @@
 #include "Delay.hpp"
 
-SimpleDelay::SimpleDelay(int _n, CircularBuffer * in): SoundUnit(in, _n + 1, 1) {
+SimpleDelay::SimpleDelay(int _n, unsigned int c, CircularBuffer * in, CircularBuffer * out):
+                SoundUnit(c, in, out) {
+    // the size of CircularBuffer must be at least n
     n = _n;
 }
 
 void SimpleDelay::step(void) {
-    y->next(x->now(-n));
+    for(unsigned int i = 0; i < channels; i++) {
+        y[i].next(x[i].now(n));
+    }
 }

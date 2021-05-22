@@ -4,6 +4,7 @@
 
 #define DELAY_TEST_LENGTH 50
 #define TEST_DELAY 15
+#define DELAY_CHANNELS 2
 
 int test_circ_buf(void);
 int test_delay(void);
@@ -16,14 +17,14 @@ int main(int argc, char ** argv) {
     } else {
         std::cout << "PASS\n";
     }
-/*
+
     std::cout << "SimpleDelay\n";
     if(test_delay()) {
         std::cout <<"FAIL\n";
     } else {
         std::cout<<"PASS\n";
     }
-*/
+
     return 0;
 }
 
@@ -77,12 +78,12 @@ int test_circ_buf(void) {
     }
 
     float buf_mem2[8];
-    CircularBuffer buffer2(8, buf_mem2);
+    buffer.init(8, buf_mem2);
     //
     for(i = 16; i < 32; i++) {
-        buffer2.next(i);
+        buffer.next(i);
         for(int k = 0; k < 8; k++) {
-            n = buffer2.now(k);
+            n = buffer.now(k);
             if (n != testVector[i][k]) {
                 retval = 1;
             }
@@ -91,28 +92,46 @@ int test_circ_buf(void) {
 
     return retval;
 }
-/*
+
 int test_delay(void) {
     float testVector[DELAY_TEST_LENGTH + TEST_DELAY];
-    float outVector[DELAY_TEST_LENGTH];
+    float outVector[DELAY_CHANNELS][DELAY_TEST_LENGTH];
     int i;
-    int delay = TEST_DELAY;
+    int j;
     int retval = 0;
-    CircularBuffer in(1);
-    SimpleDelay delayUnit(delay, &in);
-    CircularBuffer * out = delayUnit.get_y();
+
+    float in_memory[DELAY_CHANNELS][DELAY_TEST_LENGTH];
+    float out_memory[DELAY_CHANNELS][1];
+    CircularBuffer inputs[DELAY_CHANNELS];
+    CircularBuffer outputs[DELAY_CHANNELS];
+
+    for(i = 0; i < DELAY_CHANNELS; i++) {
+        inputs[i].init(DELAY_TEST_LENGTH, in_memory[i]);
+        outputs[i].init(DELAY_TEST_LENGTH, out_memory[i]);
+    }
+
+    SimpleDelay delayUnit(TEST_DELAY, DELAY_CHANNELS, inputs, outputs);
+    // pre-filling the test vector
     for(i = 0; i < TEST_DELAY; i++) {
         testVector[i] = 0;
     }
+
+    // for each channel, get the delay value (different values for different channels)
     for(i = 0; i < DELAY_TEST_LENGTH; i++) {
         testVector[i+TEST_DELAY] = i;
-        in.next(i);
+        for(j = 0; j < DELAY_CHANNELS; j++) {
+            inputs[j].next(i+j);
+        }
         delayUnit.step();
-        outVector[i] = out->now(0);
+        for(j = 0; j < DELAY_CHANNELS; j++) {
+            outVector[j][i] = outputs[j].now(0);
+        }
     }
+    // check the delays are correct
     for(i = 0; i < DELAY_TEST_LENGTH; i++) {
-        retval += (testVector[i] == outVector[i]);
+        for(j = 0; j < DELAY_CHANNELS; j++) {
+            retval += (testVector[i] == (outVector[j][i] - j));
+        }
     }
     return 0;
 }
-*/
