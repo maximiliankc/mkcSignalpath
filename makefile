@@ -9,7 +9,7 @@ _OBJ = main.o CircularBuffer.o SoundUnit.o Delay.o
 OBJ = $(patsubst %,$(ODIR)/%,$(_OBJ))
 
 _TEST_OBJ = test.o CircularBuffer.o SoundUnit.o Delay.o
-TEST_OBJ = $(patsubst %,$(ODIR)/%,$(_OBJ))
+TEST_OBJ = $(patsubst %,$(ODIR)/%,$(_TEST_OBJ))
 
 _DEPS = CircularBuffer.hpp SoundUnit.hpp Delay.hpp
 DEPS = $(patsubst %,$(IDIR)/%,$(_DEPS))
@@ -17,7 +17,7 @@ DEPS = $(patsubst %,$(IDIR)/%,$(_DEPS))
 ODIR=obj
 SRCDIR=src
 
-all: $(LINK_TARGET)
+all: $(LINK_TARGET) $(TEST_TARGET)
 
 $(LINK_TARGET): $(OBJ)
 	$(CC) -o $@ $^ $(CFLAGS)

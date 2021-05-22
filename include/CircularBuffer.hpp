@@ -5,21 +5,15 @@
 // the intended use is to look back in time, not forward, and functions are defined as such
 
 class CircularBuffer {
-    int current;
-    int length;
+    unsigned int current;
+    unsigned int length;
     float * buffer;
-    bool initialised;
 
     public:
-    CircularBuffer();
-    CircularBuffer(int);
-    ~CircularBuffer();
-    void init(int);
-    float now(int offset); // gets the current index + the offset
+    CircularBuffer(unsigned int _length, float * _buffer);
+    float now(unsigned int offset); // gets the current index + the offset
     void next(float next); // takes in a new input
     int get_len(void); // length of the buffer
-    void extend(int newLength);
-
 };
 
 #endif
