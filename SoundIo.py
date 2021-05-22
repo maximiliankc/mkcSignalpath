@@ -1,5 +1,6 @@
 
-# should print out an audio file in [channels, len, fs, [channel 1 in PCM float [0,1]], ... , [channel n in PCM float [0,1]]]
+# should print out an audio file in 
+# [channels, len, fs, [channel 1 in PCM float [0,1]], ... , [channel n in PCM float [0,1]]]
 
 import numpy as np
 import scipy.signal as s
