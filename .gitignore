@@ -3,5 +3,6 @@ obj/
 *.o
 *.pyc
 signal
+test
 
 .DS_Store

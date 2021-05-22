@@ -73,12 +73,12 @@ class SoundIo:
         ax.set_title(title)
 
     def sinusoid(self, m=1., f=1000., duration=1, channel=0):
-        len = duration*self.fs
+        len = int(duration*self.fs)
         n = np.arange(len)
         self.sound[channel] = m*np.sin(n*2*np.pi*f/self.fs)
     
     def noise(self, p=1, duration=1, channel=0):
-        len = duration*self.fs
+        len = int(duration*self.fs)
         self.sound[channel] = p*np.random.randn(len)
     
 def main(argv):
