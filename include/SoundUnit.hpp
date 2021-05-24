@@ -7,12 +7,14 @@ class SoundUnit{
     protected:
     CircularBuffer * x;
     CircularBuffer * y;
-    unsigned int channels;
+    unsigned int xChannels;
+    unsigned int yChannels;
 
     public:
-    SoundUnit(unsigned int c, CircularBuffer * in, CircularBuffer * out);
+    SoundUnit(unsigned int xc, unsigned int yc, CircularBuffer * in, CircularBuffer * out);
     virtual void step(void) = 0;
-    unsigned int get_channels(void);
+    unsigned int get_x_channels(void);
+    unsigned int get_y_channels(void);
     CircularBuffer * get_x(void);
     CircularBuffer * get_y(void);
 };
