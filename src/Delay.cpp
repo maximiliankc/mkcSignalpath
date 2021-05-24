@@ -1,5 +1,10 @@
 #include "Delay.hpp"
 
+
+SimpleDelay::SimpleDelay(): SoundUnit() {
+    n = 0;
+}
+
 SimpleDelay::SimpleDelay(int _n, unsigned int c, CircularBuffer * in, CircularBuffer * out):
                 SoundUnit(c, c, in, out) {
     // the size of CircularBuffer must be at least n
