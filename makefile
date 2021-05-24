@@ -5,13 +5,10 @@ CFLAGS=-I$(IDIR) -Werror -Wall
 LINK_TARGET=signal
 TEST_TARGET=test
 
-_OBJ = main.o CircularBuffer.o SoundUnit.o Delay.o
+_OBJ = CircularBuffer.o SoundUnit.o SoundPath.o Delay.o
 OBJ = $(patsubst %,$(ODIR)/%,$(_OBJ))
 
-_TEST_OBJ = test.o CircularBuffer.o SoundUnit.o Delay.o
-TEST_OBJ = $(patsubst %,$(ODIR)/%,$(_TEST_OBJ))
-
-_DEPS = CircularBuffer.hpp SoundUnit.hpp Delay.hpp
+_DEPS = CircularBuffer.hpp SoundUnit.hpp SoundPath.hpp Delay.hpp
 DEPS = $(patsubst %,$(IDIR)/%,$(_DEPS))
 
 ODIR=obj
@@ -19,13 +16,13 @@ SRCDIR=src
 
 all: $(LINK_TARGET) $(TEST_TARGET)
 
-$(LINK_TARGET): $(OBJ)
+$(LINK_TARGET): $(OBJ) $(ODIR)/main.o
 	$(CC) -o $@ $^ $(CFLAGS)
 
 $(ODIR)/main.o: main.cpp $(DEPS)
 	$(CC) -o $@ -c $< $(CFLAGS)
 
-$(TEST_TARGET): $(TEST_OBJ)
+$(TEST_TARGET): $(OBJ) $(ODIR)/test.o
 	$(CC) -o $@ $^ $(CFLAGS)
 
 $(ODIR)/test.o: test.cpp $(DEPS)

@@ -1,6 +1,13 @@
 #include "SoundUnit.hpp"
 
-SoundUnit::SoundUnit(unsigned int xc, unsigned int yc, CircularBuffer * in, CircularBuffer * out){
+SoundUnit::SoundUnit() {
+    xChannels = 0;
+    yChannels = 0;
+    x = 0;
+    y = 0;
+}
+
+SoundUnit::SoundUnit(unsigned int xc, unsigned int yc, CircularBuffer * in, CircularBuffer * out) {
     xChannels = xc;
     yChannels = yc;
     x = in;

@@ -11,6 +11,7 @@ class SoundUnit{
     unsigned int yChannels;
 
     public:
+    SoundUnit();
     SoundUnit(unsigned int xc, unsigned int yc, CircularBuffer * in, CircularBuffer * out);
     virtual void step(void) = 0;
     unsigned int get_x_channels(void);
