@@ -10,6 +10,7 @@
 #define FIR_LENGTH 8
 #define IIR_LENGTH 2
 #define IIR_TEST_LENGTH 10
+#define FILTER_CHANNELS 2
 
 int test_circ_buf(void);
 int test_delay(void);
@@ -31,7 +32,7 @@ int main(int argc, char ** argv) {
         std::cout<<"PASS\n";
     }
 
-    std::cout << "FILTER\n";
+    std::cout << "Filter\n";
     if(test_filter()) {
         std::cout <<"FAIL\n";
     } else {
@@ -157,23 +158,34 @@ int test_filter(void) {
     float iirb[] = {1};
     float fira[] = {1};
 
-    float inMemory[FIR_LENGTH];
-    float outMemory[IIR_LENGTH];
-    CircularBuffer in(FIR_LENGTH, inMemory);
-    CircularBuffer out(IIR_LENGTH, outMemory);
+    float inMemory[FILTER_CHANNELS][FIR_LENGTH];
+    float outMemory[FILTER_CHANNELS][IIR_LENGTH];
+    CircularBuffer in[FILTER_CHANNELS];
+    CircularBuffer out[FILTER_CHANNELS];
+
+    for(i = 0; i < FILTER_CHANNELS; i++) {
+        in[i].init(FIR_LENGTH, inMemory[i]);
+        out[i].init(IIR_LENGTH, outMemory[i]);
+    }
+
 
     // configure as a fir filter
-    DFIFilter filter(1, &in, &out, 1, fira, FIR_LENGTH, b);
+    DFIFilter filter(FILTER_CHANNELS, in, out, 1, fira, FIR_LENGTH, b);
     // test fir filter
 
-    in.next(1);
+    in[0].next(1);
+    in[1].next(2);
 
     for(i = 0; i < FIR_LENGTH; i++) {
         filter.step();
-        if (out.now(0) != b[i]) {
+        if (out[0].now(0) != b[i]) {
             return 1;
         }
-        in.next(0);
+        if (out[1].now(0) != 2*b[i]) {
+            return 1;
+        }
+        in[0].next(0);
+        in[1].next(0);
     }
     filter.step(); // clearing the last value
 
@@ -181,16 +193,20 @@ int test_filter(void) {
     filter.updateDenominator(IIR_LENGTH, a);
     filter.updateNumerator(1, iirb);
 
-    in.next(1);
+    in[0].next(1);
+    in[1].next(2);
     float check = 1;
     for(i = 0; i < IIR_TEST_LENGTH; i++) {
         filter.step();
-        if (out.now(0) != check) {
-            std::cout << "expected " << check << " got " << out.now(0) << std::endl;
+        if (out[0].now(0) != check) {
+            return 1;
+        }
+        if (out[1].now(0) != 2*check) {
             return 1;
         }
         check *= 0.5;
-        in.next(0);
+        in[0].next(0);
+        in[1].next(0);
     }
 
     //test iir filter

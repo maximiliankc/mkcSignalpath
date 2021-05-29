@@ -1,4 +1,5 @@
 #include "Filter.hpp"
+#include <iostream>
 
 Filter::Filter(): SoundUnit() {
     numLength = 0;
@@ -17,8 +18,8 @@ Filter::Filter(unsigned int c, CircularBuffer * in, CircularBuffer * out, unsign
 
 void Filter::init(unsigned int c, CircularBuffer * in, CircularBuffer * out, unsigned int _denLength, float * _a, unsigned int _numLength, float * _b) {
     SoundUnit::init(c, c, in, out);
-    updateDenominator(_denLength, a);
-    updateNumerator(_numLength, b);
+    updateDenominator(_denLength, _a);
+    updateNumerator(_numLength, _b);
 }
 
 void Filter::updateNumerator(unsigned int length, float * coefficients) {
@@ -41,13 +42,21 @@ DFIFilter::DFIFilter(unsigned int c, CircularBuffer * in, CircularBuffer * out, 
 }
 
 void DFIFilter::step(void) {
-    float out = 0;
+    float out;
     int i;
     int c;
 
+    float bcoeff;
+    float xnum;
+
+
     for(c = 0; c < xChannels; c++) {
+        out = 0;
         for(i = 0; i < numLength; i++) {
-            out += b[i]*x[c].now(i);
+            bcoeff = b[i];
+            xnum = x[c].now(i);
+            out += bcoeff*xnum;
+            //out += b[i]*x[c].now(i);
         }
         for(i = 1; i < denLength; i++) {
             out -= a[i]*y[c].now(i-1);
