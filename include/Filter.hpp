@@ -13,8 +13,8 @@ protected:
 
 public:
     Filter();
-    Filter(unsigned int xc, unsigned int yc, CircularBuffer * in, CircularBuffer * out, unsigned int numLength, float * a, unsigned int denLength, float * b); 
-    void init(unsigned int xc, unsigned int yc, CircularBuffer * in, CircularBuffer * out, unsigned int numLength, float * a, unsigned int denLength, float * b);
+    Filter(unsigned int c, CircularBuffer * in, CircularBuffer * out, unsigned int _denLength, float * _a, unsigned int _numLength, float * _b);
+    void init(unsigned int c, CircularBuffer * in, CircularBuffer * out, unsigned int _denLength, float * _a, unsigned int _numLength, float * _b);
     void updateNumerator(unsigned int length, float * coefficients);
     void updateDenominator(unsigned int length, float * coefficients);
 };
@@ -22,6 +22,6 @@ public:
 class DFIFilter: public Filter {
     public:
     DFIFilter();
-    DFIFilter(unsigned int xc, unsigned int yc, CircularBuffer * in, CircularBuffer * out, unsigned int numLength, float * a, unsigned int denLength, float * b);
+    DFIFilter(unsigned int c, CircularBuffer * in, CircularBuffer * out, unsigned int numLength, float * a, unsigned int denLength, float * b);
     void step(void);
 };

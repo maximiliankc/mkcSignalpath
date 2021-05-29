@@ -1,13 +1,19 @@
 #include <iostream>
 #include "CircularBuffer.hpp"
 #include "Delay.hpp"
+#include "Filter.hpp"
 
 #define DELAY_TEST_LENGTH 15
 #define TEST_DELAY 15
 #define DELAY_CHANNELS 2
 
+#define FIR_LENGTH 8
+#define IIR_LENGTH 2
+#define IIR_TEST_LENGTH 10
+
 int test_circ_buf(void);
 int test_delay(void);
+int test_filter(void);
 
 int main(int argc, char ** argv) {
 
@@ -24,6 +30,14 @@ int main(int argc, char ** argv) {
     } else {
         std::cout<<"PASS\n";
     }
+
+    std::cout << "FILTER\n";
+    if(test_filter()) {
+        std::cout <<"FAIL\n";
+    } else {
+        std::cout<<"PASS\n";
+    }
+
 
     return 0;
 }
@@ -133,5 +147,52 @@ int test_delay(void) {
             retval += (testVector[i] == (outVector[j][i] - j));
         }
     }
+    return 0;
+}
+
+int test_filter(void) {
+    int i;
+    float b[FIR_LENGTH] = {1, 0.5, 0.4, 0.7, 0.2, -0.5, 0.9, 0.5};
+    float a[IIR_LENGTH] = {1, -0.5};
+    float iirb[] = {1};
+    float fira[] = {1};
+
+    float inMemory[FIR_LENGTH];
+    float outMemory[IIR_LENGTH];
+    CircularBuffer in(FIR_LENGTH, inMemory);
+    CircularBuffer out(IIR_LENGTH, outMemory);
+
+    // configure as a fir filter
+    DFIFilter filter(1, &in, &out, 1, fira, FIR_LENGTH, b);
+    // test fir filter
+
+    in.next(1);
+
+    for(i = 0; i < FIR_LENGTH; i++) {
+        filter.step();
+        if (out.now(0) != b[i]) {
+            return 1;
+        }
+        in.next(0);
+    }
+    filter.step(); // clearing the last value
+
+    // configure as an iir filter
+    filter.updateDenominator(IIR_LENGTH, a);
+    filter.updateNumerator(1, iirb);
+
+    in.next(1);
+    float check = 1;
+    for(i = 0; i < IIR_TEST_LENGTH; i++) {
+        filter.step();
+        if (out.now(0) != check) {
+            std::cout << "expected " << check << " got " << out.now(0) << std::endl;
+            return 1;
+        }
+        check *= 0.5;
+        in.next(0);
+    }
+
+    //test iir filter
     return 0;
 }

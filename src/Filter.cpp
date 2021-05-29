@@ -7,16 +7,16 @@ Filter::Filter(): SoundUnit() {
     a = 0;
 }
 
-Filter::Filter(unsigned int xc, unsigned int yc, CircularBuffer * in, CircularBuffer * out, unsigned int _numLength, float * _a, unsigned int _denLength, float * _b):
-    SoundUnit(xc, yc, in, out) {
+Filter::Filter(unsigned int c, CircularBuffer * in, CircularBuffer * out, unsigned int _numLength, float * _a, unsigned int _denLength, float * _b):
+    SoundUnit(c, c, in, out) {
     numLength = _numLength;
     b = _b;
     denLength = _denLength;
     a = _a;
 }
 
-void Filter::init(unsigned int xc, unsigned int yc, CircularBuffer * in, CircularBuffer * out, unsigned int _numLength, float * _a, unsigned int _denLength, float * _b) {
-    SoundUnit::init(xc, yc, in, out);
+void Filter::init(unsigned int c, CircularBuffer * in, CircularBuffer * out, unsigned int _denLength, float * _a, unsigned int _numLength, float * _b) {
+    SoundUnit::init(c, c, in, out);
     updateDenominator(_denLength, a);
     updateNumerator(_numLength, b);
 }
@@ -35,19 +35,23 @@ DFIFilter::DFIFilter():Filter() {
     // everything we need is in the parent constructor
 }
 
-DFIFilter::DFIFilter(unsigned int xc, unsigned int yc, CircularBuffer * in, CircularBuffer * out, unsigned int _numLength, float * _a, unsigned int _denLength, float * _b):
-    Filter(xc, yc, in, out, _numLength, _a, _denLength, _b) {
+DFIFilter::DFIFilter(unsigned int c, CircularBuffer * in, CircularBuffer * out, unsigned int _denLength, float * _a, unsigned int _numLength, float * _b):
+    Filter(c, in, out, _numLength, _a, _denLength, _b) {
     // everyting we need is in the parent constructor
 }
 
 void DFIFilter::step(void) {
     float out = 0;
     int i;
-    for(i = 0; i < numLength; i++) {
-        out += b[i]*x->now(i);
+    int c;
+
+    for(c = 0; c < xChannels; c++) {
+        for(i = 0; i < numLength; i++) {
+            out += b[i]*x[c].now(i);
+        }
+        for(i = 1; i < denLength; i++) {
+            out -= a[i]*y[c].now(i-1);
+        }
+        y[c].next(out/a[0]);
     }
-    for(i = 0; i < denLength; i++) {
-        out += a[i]*y->now(i-1);
-    }
-    y->next(out/a[0]);
 }
