@@ -1,4 +1,5 @@
 #include "Delay.hpp"
+#include <iostream>
 
 
 SimpleDelay::SimpleDelay(): SoundUnit() {

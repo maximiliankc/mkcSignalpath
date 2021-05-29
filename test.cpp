@@ -2,7 +2,7 @@
 #include "CircularBuffer.hpp"
 #include "Delay.hpp"
 
-#define DELAY_TEST_LENGTH 50
+#define DELAY_TEST_LENGTH 15
 #define TEST_DELAY 15
 #define DELAY_CHANNELS 2
 
