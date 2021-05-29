@@ -8,7 +8,7 @@ SimpleDelay::SimpleDelay(): SoundUnit() {
 
 SimpleDelay::SimpleDelay(int _n, unsigned int c, CircularBuffer * in, CircularBuffer * out):
                 SoundUnit(c, c, in, out) {
-    // the size of CircularBuffer must be at least n
+    // the size of CircularBuffer must be at least n+1
     n = _n;
 }
 

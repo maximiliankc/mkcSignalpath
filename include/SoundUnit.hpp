@@ -13,6 +13,7 @@ class SoundUnit{
     public:
     SoundUnit();
     SoundUnit(unsigned int xc, unsigned int yc, CircularBuffer * in, CircularBuffer * out);
+    void init(unsigned int xc, unsigned int yc, CircularBuffer * in, CircularBuffer * out);
     virtual void step(void) = 0;
     unsigned int get_x_channels(void);
     unsigned int get_y_channels(void);

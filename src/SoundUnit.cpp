@@ -8,6 +8,10 @@ SoundUnit::SoundUnit() {
 }
 
 SoundUnit::SoundUnit(unsigned int xc, unsigned int yc, CircularBuffer * in, CircularBuffer * out) {
+    init(xc, yc, in, out);
+}
+
+void SoundUnit::init(unsigned int xc, unsigned int yc, CircularBuffer * in, CircularBuffer * out) {
     xChannels = xc;
     yChannels = yc;
     x = in;
