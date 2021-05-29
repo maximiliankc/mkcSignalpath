@@ -26,8 +26,7 @@ void SoundPath::step(void) {
 
     // run all the sound path elements
     for(i = 0; i < SOUND_UNITS; i++) {
-        delay.step();
-        //Units[i]->step();
+        Units[i]->step();
 
     }
     // fill the output buffer with the outputs of the final effect
