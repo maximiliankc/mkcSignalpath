@@ -2,6 +2,7 @@
 #include "CircularBuffer.hpp"
 #include "Delay.hpp"
 #include "Filter.hpp"
+#include "Oscillator.hpp"
 
 #define DELAY_TEST_LENGTH 15
 #define TEST_DELAY 15
@@ -15,6 +16,7 @@
 int test_circ_buf(void);
 int test_delay(void);
 int test_filter(void);
+int test_oscillator(void);
 
 int main(int argc, char ** argv) {
 
@@ -34,6 +36,13 @@ int main(int argc, char ** argv) {
 
     std::cout << "Filter\n";
     if(test_filter()) {
+        std::cout <<"FAIL\n";
+    } else {
+        std::cout<<"PASS\n";
+    }
+
+    std::cout << "Oscillator\n";
+    if(test_oscillator()) {
         std::cout <<"FAIL\n";
     } else {
         std::cout<<"PASS\n";
@@ -210,5 +219,75 @@ int test_filter(void) {
     }
 
     //test iir filter
+    return 0;
+}
+
+
+
+
+int test_oscillator(void) {
+    float inMemory[OSC_CHANNELS][1];
+    CircularBuffer in[OSC_CHANNELS];
+    float outMemory[OSC_CHANNELS][OSC_MEMORY];
+    CircularBuffer out[OSC_CHANNELS];
+    int i;
+
+    for(i = 0; i < OSC_CHANNELS; i++) {
+        in[i].init(1, inMemory[i]);
+        out[i].init(OSC_MEMORY, outMemory[i]);
+    }
+    Oscillator osc(in, out, 0.5);
+
+    in[0].next(1);
+    for(i = 0; i < 10; i++) {
+        osc.step();
+        in[0].next(0);
+        if (i%2) {
+            // if odd, output should be 1
+            if (out[0].now(0) != -1) {
+                std::cout << "i " << i << " expected -1 got " << out[0].now(0) << std::endl;
+                return 1;
+            }
+        } else {
+            // otherwise, output should be -1
+            if (out[0].now(0) != 1) {
+                std::cout << "i " << i << " expected 1 got " << out[0].now(0) << std::endl;
+                return 1;
+            }
+        }
+        // // should be zero (or close to it) always
+        if (out[1].now(0)*out[1].now(0) > 1e-8) {
+            std::cout << "i " << i << " expected 0 got " << out[1].now(0) << std::endl;
+            return 1;
+        }
+    }
+
+    osc.stop();
+    
+    in[1].next(1);
+    for(i = 0; i < 10; i++) {
+        osc.step();
+        in[1].next(0);
+        if (i%2) {
+            // if odd, output should be 1
+            if (out[1].now(0) != -1) {
+                std::cout << "i " << i << " expected -1 got " << out[1].now(0) << std::endl;
+                return 1;
+            }
+        } else {
+            // otherwise, output should be -1
+            if (out[1].now(0) != 1) {
+                std::cout << "i " << i << " expected 1 got " << out[1].now(0) << std::endl;
+                return 1;
+            }
+        }
+        // should be zero (or close to it) always
+        if (out[0].now(0)*out[0].now(0) > 1e-7) {
+            std::cout << "i " << i << " expected 0 got " << out[0].now(0) << std::endl;
+            return 1;
+        }
+    }
+
+
     return 0;
 }

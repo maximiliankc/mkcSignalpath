@@ -5,10 +5,10 @@ CFLAGS=-I$(IDIR) -Werror -Wall
 LINK_TARGET=signal
 TEST_TARGET=test
 
-_OBJ = CircularBuffer.o SoundUnit.o SoundPath.o Delay.o Filter.o
+_OBJ = CircularBuffer.o SoundUnit.o SoundPath.o Delay.o Filter.o Oscillator.o
 OBJ = $(patsubst %,$(ODIR)/%,$(_OBJ))
 
-_DEPS = CircularBuffer.hpp SoundUnit.hpp SoundPath.hpp Delay.hpp Filter.hpp
+_DEPS = CircularBuffer.hpp SoundUnit.hpp SoundPath.hpp Delay.hpp Filter.hpp Oscillator.hpp
 DEPS = $(patsubst %,$(IDIR)/%,$(_DEPS))
 
 ODIR=obj

@@ -1,7 +1,7 @@
 import SoundIo
 
 def main():
-    time = 0.01
+    time = 10
     io = SoundIo.SoundIo()
     io.sinusoid(channel=0, duration=time)
     io.noise(channel=1, duration=time)

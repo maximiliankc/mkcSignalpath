@@ -1,4 +1,5 @@
 #include "CircularBuffer.hpp"
+#include <iostream>
 
 CircularBuffer::CircularBuffer(){
     initialised = false;

@@ -12,9 +12,9 @@ SoundPath::SoundPath() {
     }
     // set coefficients
     a[0] = 1;
-    a[1] = 0;
+    a[1] = -0.5;
     a[2] = 0;
-    b[0] = 1;
+    b[0] = 0.5;
     b[1] = 0;
     b[2] = 0;
     filter.init(DELAY_CHANNELS, filterIn, filterOut, FILTER_LENGTH, a, FILTER_LENGTH, b);
