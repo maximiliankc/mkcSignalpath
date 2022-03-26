@@ -15,3 +15,17 @@ class Oscillator: SoundUnit {
     void stop(void);
     void setF(float f);
 };
+
+class Square: SoundUnit{
+    Oscillator osc;
+    float s[OSC_CHANNELS][OSC_MEMORY];
+    CircularBuffer s;
+
+    public:
+    Square();
+    Square(CircularBuffer * in, CircularBuffer * out, float f);
+    void init(CircularBuffer * in, CircularBuffer * out, float f);
+    void step(void);
+    void stop(void);
+    void setF(float f);
+};
