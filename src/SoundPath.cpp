@@ -7,8 +7,8 @@ SoundPath::SoundPath() {
     // set up filter
     // memory
     for(i = 0; i < DELAY_CHANNELS; i++) {
-        filterIn[i].init(FILTER_LENGTH, filterInMemory[i]);
-        filterOut[i].init(FILTER_LENGTH, filterOutMemory[i]);
+        circular_buffer_init(&filterIn[i], FILTER_LENGTH, filterInMemory[i]);
+        circular_buffer_init(&filterOut[i], FILTER_LENGTH, filterOutMemory[i]);
     }
     // set coefficients
     a[0] = 1;
@@ -23,7 +23,8 @@ SoundPath::SoundPath() {
 
     // set up delay
     for(i = 0; i < DELAY_CHANNELS; i++) {
-        delayIn[i].init(DELAY_SAMPLES+1, delayInMemory[i]);
+
+        circular_buffer_init(&delayIn[i], DELAY_SAMPLES+1, delayInMemory[i]);
     }
     delay.init(DELAY_SAMPLES, DELAY_CHANNELS, delayIn, filterIn);
     // set delay to be the first (and for now only) unit to be used
@@ -37,7 +38,7 @@ void SoundPath::step(void) {
     // feed the inputs into the first unit
     int i;
     for(i = 0; i < IN_CHANNELS; i++) {
-        Units[0]->get_x()[i].next(x[i]);
+        circular_buffer_next(&(Units[0]->get_x()[i]), x[i]);
     }
 
     // run all the sound path elements
@@ -46,7 +47,7 @@ void SoundPath::step(void) {
     }
     // fill the output buffer with the outputs of the final effect
     for(i = 0; i < OUT_CHANNELS; i++) {
-        y[i] = Units[SOUND_UNITS-1]->get_y()[i].now(0);
+        y[i] =circular_buffer_now(&(Units[SOUND_UNITS-1]->get_y()[i]), 0);
     }
 }
 

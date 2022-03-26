@@ -1,7 +1,6 @@
 #include "Oscillator.hpp"
 #include <cmath>
 // will likely need to ifdef this import if putting in an embedded system
-#include <iostream>
 
 Oscillator::Oscillator(): SoundUnit() {
     c = 0;
@@ -23,16 +22,18 @@ void Oscillator::step(void) {
     float real;
     float imaginary;
     // do the cosine first
-    real = c*y[0].now(0) - s*y[1].now(0) + x[0].now(0);
+    real = c*circular_buffer_now(&y[0], 0) - s*circular_buffer_now(&y[1], 0) + circular_buffer_now(&x[0], 0);
     // next the sine
-    imaginary = s*y[0].now(0) + c*y[1].now(0) + x[1].now(0);
-    y[0].next(real);
-    y[1].next(imaginary);
+    imaginary = s*circular_buffer_now(&y[0], 0) + c*circular_buffer_now(&y[1], 0) + circular_buffer_now(&x[1], 0);
+    // save the result
+    circular_buffer_next(&y[0], real);
+    circular_buffer_next(&y[1], imaginary);
 }
 
 void Oscillator::stop(void) {
-    y[0].next(0);
-    y[1].next(0);
+    // set the current state 
+    circular_buffer_next(&y[0], 0);
+    circular_buffer_next(&y[1], 0);
 }
 
 void Oscillator::setF(float f) {

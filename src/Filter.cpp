@@ -52,15 +52,17 @@ void DFIFilter::step(void) {
 
     for(c = 0; c < xChannels; c++) {
         out = 0;
+        // out = <x_in, b>, the feedforward part of the filter
         for(i = 0; i < numLength; i++) {
             bcoeff = b[i];
-            xnum = x[c].now(i);
+            xnum = circular_buffer_now(&x[c], i);
             out += bcoeff*xnum;
-            //out += b[i]*x[c].now(i);
         }
+        // now the feedback part, y[n] = <x_in, b> - <y, a> (except a0 and y[n] ofc)
         for(i = 1; i < denLength; i++) {
-            out -= a[i]*y[c].now(i-1);
+            out -= a[i]*circular_buffer_now(&y[c], i-1);
         }
-        y[c].next(out/a[0]);
+        // incorporate a0 and save
+        circular_buffer_next(&y[c], out/a[0]);
     }
 }

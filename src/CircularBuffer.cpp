@@ -1,48 +1,26 @@
 #include "CircularBuffer.hpp"
-#include <iostream>
 
-CircularBuffer::CircularBuffer(){
-    initialised = false;
-    length = 0;
-    current = 0;
-    buffer = 0;
-}
 
-CircularBuffer::CircularBuffer(unsigned int _length, float * _buffer) {
-    init(_length, _buffer);
-}
-
-void CircularBuffer::init(unsigned int _length, float * _buffer) {
-    length = _length;
-    buffer = _buffer;
-    current = 0;
+void circular_buffer_init(CircularBuffer * self, unsigned int _length, float * _buffer) {
+    self->length = _length;
+    self->buffer = _buffer;
+    self->current = 0;
     // fill the buffer with zeros
-    for(int i = 0; i < length; i++) {
-        buffer[i] = 0.0;
-    }
-    initialised=true;
-}
-
-float CircularBuffer::now(unsigned int offset){
-    if(initialised) {
-        int index = current + offset;
-        index %= length;
-        return buffer[index];
-    } else {
-        return 0;
+    for(int i = 0; i < self->length; i++) {
+        self->buffer[i] = 0.0;
     }
 }
 
-void CircularBuffer::next(float next){
-    if(initialised) {
-        if(current == 0) {
-            current = length;
-        }
-        current--;
-        buffer[current] = next;
-    }
+float circular_buffer_now(CircularBuffer * self, unsigned int offset){
+    int index = self->current + offset;
+    index %= self->length;
+    return self->buffer[index];
 }
 
-int CircularBuffer::get_len(void){
-    return length;
+void circular_buffer_next(CircularBuffer * self, float next){
+    if(self->current == 0) {
+        self->current = self->length;
+    }
+    self->current--;
+    self->buffer[self->current] = next;
 }

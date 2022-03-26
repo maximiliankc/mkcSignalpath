@@ -21,7 +21,9 @@ void SimpleDelay::init(int _n, unsigned int c, CircularBuffer * in, CircularBuff
 }
 
 void SimpleDelay::step(void) {
+    float intermediate;
     for(unsigned int i = 0; i < xChannels; i++) {
-        y[i].next(x[i].now(n));
+        intermediate = circular_buffer_now(&x[i], n);
+        circular_buffer_next(&y[i], intermediate);
     }
 }
