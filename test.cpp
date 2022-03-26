@@ -136,7 +136,8 @@ int test_delay(void) {
         circular_buffer_init(&outputs[i], DELAY_TEST_LENGTH, out_memory[i]);
     }
 
-    SimpleDelay delayUnit(TEST_DELAY, DELAY_CHANNELS, inputs, outputs);
+    SimpleDelay delayUnit;
+    delay_init(&delayUnit, TEST_DELAY, DELAY_CHANNELS, inputs, outputs);
     // pre-filling the test vector
     for(i = 0; i < TEST_DELAY; i++) {
         testVector[i] = 0;
@@ -148,7 +149,7 @@ int test_delay(void) {
         for(j = 0; j < DELAY_CHANNELS; j++) {
             circular_buffer_next(&inputs[j], i + j);
         }
-        delayUnit.step();
+        delay_step(&delayUnit);
         for(j = 0; j < DELAY_CHANNELS; j++) {
             outVector[j][i] = circular_buffer_now(&outputs[j], 0);
         }

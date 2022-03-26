@@ -1,16 +1,17 @@
 #ifndef DELAY_HPP
 #define DELAY_HPP
 
-#include "SoundUnit.hpp"
+#include "CircularBuffer.hpp"
 
-class SimpleDelay: public SoundUnit {
+struct SimpleDelay {
     int n;
+    CircularBuffer * x;
+    CircularBuffer * y;
+    unsigned int xChannels;
+    unsigned int yChannels;
 
-    public:
-    SimpleDelay();
-    SimpleDelay(int _n, unsigned int c, CircularBuffer * in, CircularBuffer * out);
-    void init(int _n, unsigned int c, CircularBuffer * in, CircularBuffer * out);
-    void step(void);
 };
 
+void delay_init(SimpleDelay * self, int _n, unsigned int c, CircularBuffer * in, CircularBuffer * out);
+void delay_step(SimpleDelay * self);
 #endif

@@ -23,12 +23,10 @@ SoundPath::SoundPath() {
 
     // set up delay
     for(i = 0; i < DELAY_CHANNELS; i++) {
-
         circular_buffer_init(&delayIn[i], DELAY_SAMPLES+1, delayInMemory[i]);
     }
-    delay.init(DELAY_SAMPLES, DELAY_CHANNELS, delayIn, filterIn);
+    delay_init(&delay, DELAY_SAMPLES, DELAY_CHANNELS, delayIn, filterIn);
     // set delay to be the first (and for now only) unit to be used
-    Units[0] = &delay;
 }
 
 // this is where the sequence is set
@@ -38,16 +36,19 @@ void SoundPath::step(void) {
     // feed the inputs into the first unit
     int i;
     for(i = 0; i < IN_CHANNELS; i++) {
-        circular_buffer_next(&(Units[0]->get_x()[i]), x[i]);
+        circular_buffer_next(&(delay.x[i]), x[i]);
     }
 
     // run all the sound path elements
     for(i = 0; i < SOUND_UNITS; i++) {
         Units[i]->step();
     }
-    // fill the output buffer with the outputs of the final effect
+    // 
+    delay_step(&delay);
+    filter.step();
+    // fill the output buffer with the outputs of the final block
     for(i = 0; i < OUT_CHANNELS; i++) {
-        y[i] =circular_buffer_now(&(Units[SOUND_UNITS-1]->get_y()[i]), 0);
+        y[i] =circular_buffer_now(&(filter.get_y()[i]), 0);
     }
 }
 
