@@ -1,5 +1,4 @@
-#include <iostream>
-#include <string>
+#include <stdio.h>
 
 #include "SoundPath.hpp"
 
@@ -15,7 +14,7 @@ int main(int argc, char** argv){
     float ** soundOut;
 
     SoundPath soundPath;
-    std::string input;
+    float input;
     float * in;
     float * out;
 
@@ -24,22 +23,15 @@ int main(int argc, char** argv){
     out = soundPath.getY();
 
     // extract the sampling frequency, length, channels
-
-    if(std::cin >> input){
-        channels = std::stoul(input);
-    } else {
+    if(!scanf("%d", &channels)) {
         return 1;
     }
 
-    if(std::cin >> input){
-        length = std::stoul(input);
-    } else {
+    if(!scanf("%d", &length)){
         return 1;
     }
 
-    if(std::cin >> input){
-        fs = std::stof(input);
-    } else {
+    if(!scanf("%g", &fs)) {
         return 1;
     }
 
@@ -51,9 +43,7 @@ int main(int argc, char** argv){
         soundIn[i] = new float[length];
         soundOut[i] = new float[length];
         for(j=0; j < length; j++) {
-            if(std::cin >> input){
-                soundIn[i][j] = std::stof(input);
-            } else {
+            if(!scanf("%g", &input)) {
                 return 1;
             }
         }
@@ -71,13 +61,13 @@ int main(int argc, char** argv){
     }
 
     // printing everything out
-    std::cout << channels << " ";
-    std::cout << length << " ";
-    std::cout << fs << " ";
+    printf("%d ", channels);
+    printf("%d ", length);
+    printf("%g ", fs);
     
     for(i=0; i < channels; i++) {
         for(j=0; j < length; j++) {
-            std::cout << soundOut[i][j] << " ";
+           printf("%g ", soundOut[i][j]);
         }
         // delete the array
         delete[] soundIn[i];

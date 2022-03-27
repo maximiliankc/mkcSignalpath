@@ -1,4 +1,4 @@
-#include <iostream>
+#include <stdio.h>
 #include "CircularBuffer.hpp"
 #include "Delay.hpp"
 #include "Filter.hpp"
@@ -20,34 +20,33 @@ int test_oscillator(void);
 
 int main(int argc, char ** argv) {
 
-    std::cout << "CircularBuffer\n";
+    printf("CircularBuffer\n");
     if(test_circ_buf()) {
-        std::cout << "FAIL\n";
+        printf("FAIL\n");
     } else {
-        std::cout << "PASS\n";
+        printf("PASS\n");
     }
 
-    std::cout << "SimpleDelay\n";
+    printf("SimpleDelay\n");
     if(test_delay()) {
-        std::cout <<"FAIL\n";
+        printf("FAIL\n");
     } else {
-        std::cout<<"PASS\n";
+        printf("PASS\n");
     }
 
-    std::cout << "Filter\n";
+    printf("Filter\n");
     if(test_filter()) {
-        std::cout <<"FAIL\n";
+        printf("FAIL\n");
     } else {
-        std::cout<<"PASS\n";
+        printf("PASS\n");
     }
 
-    std::cout << "Oscillator\n";
+    printf("Oscillator\n");
     if(test_oscillator()) {
-        std::cout <<"FAIL\n";
+        printf("FAIL\n");
     } else {
-        std::cout<<"PASS\n";
+        printf("PASS\n");
     }
-
 
     return 0;
 }
@@ -249,22 +248,16 @@ int test_oscillator(void) {
         if (i%2) {
             // if odd, output should be 1
             if (circular_buffer_now(&out[0], 0) != -1) {
-                std::cout << "i " << i << " expected -1 got " << circular_buffer_now(&out[0], 0) << std::endl;
-                std::cout << "1" << std::endl;
                 return 1;
             }
         } else {
             // otherwise, output should be -1
             if (circular_buffer_now(&out[0], 0) != 1) {
-                std::cout << "i " << i << " expected 1 got " << circular_buffer_now(&out[0], 0) << std::endl;
-                std::cout << "2" << std::endl;
                 return 1;
             }
         }
         // // should be zero (or close to it) always
         if (circular_buffer_now(&out[1], 0)*circular_buffer_now(&out[1], 0) > 1e-8) {
-            std::cout << "i " << i << " expected 0 got " << circular_buffer_now(&out[1], 0) << std::endl;
-            std::cout << "3" << std::endl;
             return 1;
         }
     }
@@ -278,22 +271,16 @@ int test_oscillator(void) {
         if (i%2) {
             // if odd, output should be 1
             if (circular_buffer_now(&out[1], 0) != -1) {
-                std::cout << "i " << i << " expected -1 got " << circular_buffer_now(&out[1], 0) << std::endl;
-                std::cout << "4" << std::endl;
                 return 1;
             }
         } else {
             // otherwise, output should be -1
             if (circular_buffer_now(&out[1], 0) != 1) {
-                std::cout << "i " << i << " expected 1 got " << circular_buffer_now(&out[1], 0) << std::endl;
-                std::cout << "5" << std::endl;
                 return 1;
             }
         }
         // should be zero (or close to it) always
         if (circular_buffer_now(&out[0],0)*circular_buffer_now(&out[0], 0) > 1e-7) {
-            std::cout << "i " << i << " expected 0 got " << circular_buffer_now(&out[0], 0) << std::endl;
-            std::cout << "6" << std::endl;
             return 1;
         }
     }
