@@ -15,7 +15,7 @@
 
 #define SOUND_UNITS 2
 
-struct SoundPath {
+typedef struct _SoundPath {
     float x[IN_CHANNELS];
     float y[OUT_CHANNELS];
 
@@ -40,7 +40,7 @@ struct SoundPath {
     float b[FILTER_LENGTH];
     // unit
     Filter filter;
-};
+} SoundPath;
 
 void soundpath_init(SoundPath * self);
 void soundpath_step(SoundPath * self);
