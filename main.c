@@ -1,7 +1,7 @@
-#include <iostream>
-#include <string>
+#include <stdio.h>
+#include <stdlib.h>
 
-#include "SoundPath.hpp"
+#include "SoundPath.h"
 
 // should read/print an audio file in [channels, len, fs, [channel 1 in PCM float [0,1]], ... , [channel n in PCM float [0,1]]]
 
@@ -15,45 +15,38 @@ int main(int argc, char** argv){
     float ** soundOut;
 
     SoundPath soundPath;
-    std::string input;
+    float input;
     float * in;
     float * out;
 
+    soundpath_init(&soundPath);
+
     //point in and out to the right spots
-    in = soundPath.getX();
-    out = soundPath.getY();
+    in = soundPath.x;
+    out = soundPath.y;
 
     // extract the sampling frequency, length, channels
-
-    if(std::cin >> input){
-        channels = std::stoul(input);
-    } else {
+    if(!scanf("%d", &channels)) {
         return 1;
     }
 
-    if(std::cin >> input){
-        length = std::stoul(input);
-    } else {
+    if(!scanf("%d", &length)){
         return 1;
     }
 
-    if(std::cin >> input){
-        fs = std::stof(input);
-    } else {
+    if(!scanf("%g", &fs)) {
         return 1;
     }
 
-    soundIn = new float*[channels];
-    soundOut = new float*[channels];
+    soundIn = (float **)malloc(channels*sizeof(float*));
+    soundOut = (float **)malloc(channels*sizeof(float*));
 
     // populate the list of channels
     for(i=0; i < channels; i++) {
-        soundIn[i] = new float[length];
-        soundOut[i] = new float[length];
+        soundIn[i] = (float *)malloc(length*sizeof(float));
+        soundOut[i] = (float *)malloc(length*sizeof(float));
         for(j=0; j < length; j++) {
-            if(std::cin >> input){
-                soundIn[i][j] = std::stof(input);
-            } else {
+            if(!scanf("%g", &input)) {
                 return 1;
             }
         }
@@ -64,27 +57,27 @@ int main(int argc, char** argv){
         for(i = 0; i < channels; i++) {
             in[i] = soundIn[i][j];
         }
-        soundPath.step();
+        soundpath_step(&soundPath);
         for(i = 0; i < channels; i++) {
             soundOut[i][j] = out[i];
         }
     }
 
     // printing everything out
-    std::cout << channels << " ";
-    std::cout << length << " ";
-    std::cout << fs << " ";
+    printf("%d ", channels);
+    printf("%d ", length);
+    printf("%g ", fs);
     
     for(i=0; i < channels; i++) {
         for(j=0; j < length; j++) {
-            std::cout << soundOut[i][j] << " ";
+           printf("%g ", soundOut[i][j]);
         }
         // delete the array
-        delete[] soundIn[i];
-        delete[] soundOut[i];
+        free(soundIn[i]);
+        free(soundOut[i]);
     }
-    delete[] soundIn;
-    delete[] soundOut;
+    free(soundIn);
+    free(soundOut);
 
     return 0;
 }

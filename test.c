@@ -1,8 +1,8 @@
-#include <iostream>
-#include "CircularBuffer.hpp"
-#include "Delay.hpp"
-#include "Filter.hpp"
-#include "Oscillator.hpp"
+#include <stdio.h>
+#include "CircularBuffer.h"
+#include "Delay.h"
+#include "Filter.h"
+#include "Oscillator.h"
 
 #define DELAY_TEST_LENGTH 15
 #define TEST_DELAY 15
@@ -20,34 +20,33 @@ int test_oscillator(void);
 
 int main(int argc, char ** argv) {
 
-    std::cout << "CircularBuffer\n";
+    printf("CircularBuffer\n");
     if(test_circ_buf()) {
-        std::cout << "FAIL\n";
+        printf("FAIL\n");
     } else {
-        std::cout << "PASS\n";
+        printf("PASS\n");
     }
 
-    std::cout << "SimpleDelay\n";
+    printf("SimpleDelay\n");
     if(test_delay()) {
-        std::cout <<"FAIL\n";
+        printf("FAIL\n");
     } else {
-        std::cout<<"PASS\n";
+        printf("PASS\n");
     }
 
-    std::cout << "Filter\n";
+    printf("Filter\n");
     if(test_filter()) {
-        std::cout <<"FAIL\n";
+        printf("FAIL\n");
     } else {
-        std::cout<<"PASS\n";
+        printf("PASS\n");
     }
 
-    std::cout << "Oscillator\n";
+    printf("Oscillator\n");
     if(test_oscillator()) {
-        std::cout <<"FAIL\n";
+        printf("FAIL\n");
     } else {
-        std::cout<<"PASS\n";
+        printf("PASS\n");
     }
-
 
     return 0;
 }
@@ -87,14 +86,16 @@ int test_circ_buf(void) {
                                {31, 30, 29, 28, 27, 26, 25, 24}};
     int retval = 0;
     float buf_mem[4];
-    CircularBuffer buffer(4, buf_mem);
+    CircularBuffer buffer;
     int i;
     int n;
+    
+    circular_buffer_init(&buffer, 4, buf_mem);
 
     for(i = 0; i < 16; i++) {
-        buffer.next(i);
+        circular_buffer_next(&buffer, i);
         for(int k = 0; k < 8; k++) {
-            n = buffer.now(k);
+            n = circular_buffer_now(&buffer, k);
             if (n != testVector[i][k]) {
                 retval = 1;
             }
@@ -102,12 +103,12 @@ int test_circ_buf(void) {
     }
 
     float buf_mem2[8];
-    buffer.init(8, buf_mem2);
-    //
+    circular_buffer_init(&buffer, 8, buf_mem2);
+
     for(i = 16; i < 32; i++) {
-        buffer.next(i);
+        circular_buffer_next(&buffer, i);
         for(int k = 0; k < 8; k++) {
-            n = buffer.now(k);
+            n = circular_buffer_now(&buffer, k);
             if (n != testVector[i][k]) {
                 retval = 1;
             }
@@ -130,11 +131,12 @@ int test_delay(void) {
     CircularBuffer outputs[DELAY_CHANNELS];
 
     for(i = 0; i < DELAY_CHANNELS; i++) {
-        inputs[i].init(DELAY_TEST_LENGTH, in_memory[i]);
-        outputs[i].init(DELAY_TEST_LENGTH, out_memory[i]);
+        circular_buffer_init(&inputs[i], DELAY_TEST_LENGTH, in_memory[i]);
+        circular_buffer_init(&outputs[i], DELAY_TEST_LENGTH, out_memory[i]);
     }
 
-    SimpleDelay delayUnit(TEST_DELAY, DELAY_CHANNELS, inputs, outputs);
+    SimpleDelay delayUnit;
+    delay_init(&delayUnit, TEST_DELAY, DELAY_CHANNELS, inputs, outputs);
     // pre-filling the test vector
     for(i = 0; i < TEST_DELAY; i++) {
         testVector[i] = 0;
@@ -144,11 +146,11 @@ int test_delay(void) {
     for(i = 0; i < DELAY_TEST_LENGTH; i++) {
         testVector[i+TEST_DELAY] = i;
         for(j = 0; j < DELAY_CHANNELS; j++) {
-            inputs[j].next(i+j);
+            circular_buffer_next(&inputs[j], i + j);
         }
-        delayUnit.step();
+        delay_step(&delayUnit);
         for(j = 0; j < DELAY_CHANNELS; j++) {
-            outVector[j][i] = outputs[j].now(0);
+            outVector[j][i] = circular_buffer_now(&outputs[j], 0);
         }
     }
     // check the delays are correct
@@ -173,56 +175,56 @@ int test_filter(void) {
     CircularBuffer out[FILTER_CHANNELS];
 
     for(i = 0; i < FILTER_CHANNELS; i++) {
-        in[i].init(FIR_LENGTH, inMemory[i]);
-        out[i].init(IIR_LENGTH, outMemory[i]);
+        circular_buffer_init(&in[i], FIR_LENGTH, inMemory[i]);
+        circular_buffer_init(&out[i], IIR_LENGTH, outMemory[i]);
     }
-
 
     // configure as a fir filter
-    DFIFilter filter(FILTER_CHANNELS, in, out, 1, fira, FIR_LENGTH, b);
+    Filter filter;
+    filter_init(&filter, FILTER_CHANNELS, in, out, 1, fira, FIR_LENGTH, b);
     // test fir filter
 
-    in[0].next(1);
-    in[1].next(2);
+    circular_buffer_next(&in[0], 1);
+    circular_buffer_next(&in[1], 2);
 
     for(i = 0; i < FIR_LENGTH; i++) {
-        filter.step();
-        if (out[0].now(0) != b[i]) {
+        filter_step(&filter);
+        if (circular_buffer_now(&out[0], 0) != b[i]) {
             return 1;
         }
-        if (out[1].now(0) != 2*b[i]) {
+        if (circular_buffer_now(&out[1], 0) != 2*b[i]) {
             return 1;
         }
-        in[0].next(0);
-        in[1].next(0);
+        circular_buffer_next(&in[0], 0);
+        circular_buffer_next(&in[1], 0);
     }
-    filter.step(); // clearing the last value
+    filter_step(&filter); // clearing the last value
 
     // configure as an iir filter
-    filter.updateDenominator(IIR_LENGTH, a);
-    filter.updateNumerator(1, iirb);
+    filter.aLen = IIR_LENGTH;
+    filter.a = a;
+    filter.bLen = 1;
+    filter.b = iirb;
 
-    in[0].next(1);
-    in[1].next(2);
+    circular_buffer_next(&in[0], 1);
+    circular_buffer_next(&in[1], 2);
     float check = 1;
     for(i = 0; i < IIR_TEST_LENGTH; i++) {
-        filter.step();
-        if (out[0].now(0) != check) {
+        filter_step(&filter);
+        if (circular_buffer_now(&out[0], 0) != check) {
             return 1;
         }
-        if (out[1].now(0) != 2*check) {
+        if (circular_buffer_now(&out[1], 0) != 2*check) {
             return 1;
         }
         check *= 0.5;
-        in[0].next(0);
-        in[1].next(0);
+        circular_buffer_next(&in[0], 0);
+        circular_buffer_next(&in[1], 0);
     }
 
     //test iir filter
     return 0;
 }
-
-
 
 
 int test_oscillator(void) {
@@ -233,61 +235,55 @@ int test_oscillator(void) {
     int i;
 
     for(i = 0; i < OSC_CHANNELS; i++) {
-        in[i].init(1, inMemory[i]);
-        out[i].init(OSC_MEMORY, outMemory[i]);
+        circular_buffer_init(&in[i], 1, inMemory[i]);
+        circular_buffer_init(&out[i], OSC_MEMORY, outMemory[i]);
     }
-    Oscillator osc(in, out, 0.5);
+    Oscillator osc;
+    osc_init(&osc, in, out, 0.5);
 
-    in[0].next(1);
+    circular_buffer_next(&in[0], 1);
     for(i = 0; i < 10; i++) {
-        osc.step();
-        in[0].next(0);
+        osc_step(&osc);
+        circular_buffer_next(&in[0], 0);
         if (i%2) {
             // if odd, output should be 1
-            if (out[0].now(0) != -1) {
-                std::cout << "i " << i << " expected -1 got " << out[0].now(0) << std::endl;
+            if (circular_buffer_now(&out[0], 0) != -1) {
                 return 1;
             }
         } else {
             // otherwise, output should be -1
-            if (out[0].now(0) != 1) {
-                std::cout << "i " << i << " expected 1 got " << out[0].now(0) << std::endl;
+            if (circular_buffer_now(&out[0], 0) != 1) {
                 return 1;
             }
         }
         // // should be zero (or close to it) always
-        if (out[1].now(0)*out[1].now(0) > 1e-8) {
-            std::cout << "i " << i << " expected 0 got " << out[1].now(0) << std::endl;
+        if (circular_buffer_now(&out[1], 0)*circular_buffer_now(&out[1], 0) > 1e-8) {
             return 1;
         }
     }
 
-    osc.stop();
+    osc_stop(&osc);
     
-    in[1].next(1);
+    circular_buffer_next(&in[1], 1);
     for(i = 0; i < 10; i++) {
-        osc.step();
-        in[1].next(0);
+        osc_step(&osc);
+        circular_buffer_next(&in[1], 0);
         if (i%2) {
             // if odd, output should be 1
-            if (out[1].now(0) != -1) {
-                std::cout << "i " << i << " expected -1 got " << out[1].now(0) << std::endl;
+            if (circular_buffer_now(&out[1], 0) != -1) {
                 return 1;
             }
         } else {
             // otherwise, output should be -1
-            if (out[1].now(0) != 1) {
-                std::cout << "i " << i << " expected 1 got " << out[1].now(0) << std::endl;
+            if (circular_buffer_now(&out[1], 0) != 1) {
                 return 1;
             }
         }
         // should be zero (or close to it) always
-        if (out[0].now(0)*out[0].now(0) > 1e-7) {
-            std::cout << "i " << i << " expected 0 got " << out[0].now(0) << std::endl;
+        if (circular_buffer_now(&out[0],0)*circular_buffer_now(&out[0], 0) > 1e-7) {
             return 1;
         }
     }
-
 
     return 0;
 }

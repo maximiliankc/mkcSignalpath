@@ -1,8 +1,8 @@
-#ifndef SOUND_PATH_HPP
-#define SOUND_PATH_HPP
+#ifndef SOUND_PATH_H
+#define SOUND_PATH_H
 
-#include "Delay.hpp"
-#include "Filter.hpp"
+#include "Delay.h"
+#include "Filter.h"
 
 #define IN_CHANNELS 2
 #define OUT_CHANNELS 2
@@ -15,10 +15,9 @@
 
 #define SOUND_UNITS 2
 
-class SoundPath {
+typedef struct SoundPath {
     float x[IN_CHANNELS];
     float y[OUT_CHANNELS];
-    SoundUnit * Units[SOUND_UNITS];
 
     // this is where the sound units and their memory is setup
 
@@ -40,15 +39,11 @@ class SoundPath {
     float a[FILTER_LENGTH];
     float b[FILTER_LENGTH];
     // unit
-    DFIFilter filter;
-    
+    Filter filter;
+} SoundPath;
 
-    public:
-    SoundPath();
-    void step(void);
-    float * getX(void);
-    float * getY(void);
+void soundpath_init(SoundPath * self);
+void soundpath_step(SoundPath * self);
 
-};
 
 #endif
