@@ -1,5 +1,5 @@
-#ifndef CIRCULAR_BUFFER_HPP
-#define CIRCULAR_BUFFER_HPP
+#ifndef CIRCULAR_BUFFER_H
+#define CIRCULAR_BUFFER_H
 
 // a pretty simple Circular buffer, with a float at its core
 // the intended use is to look back in time, not forward, and functions are defined as such

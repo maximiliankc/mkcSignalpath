@@ -1,5 +1,5 @@
-#include "Oscillator.hpp"
-#include <cmath>
+#include "Oscillator.h"
+#include <math.h>
 // will likely need to ifdef this import if putting in an embedded system
 
 

@@ -1,8 +1,8 @@
-#ifndef SOUND_PATH_HPP
-#define SOUND_PATH_HPP
+#ifndef SOUND_PATH_H
+#define SOUND_PATH_H
 
-#include "Delay.hpp"
-#include "Filter.hpp"
+#include "Delay.h"
+#include "Filter.h"
 
 #define IN_CHANNELS 2
 #define OUT_CHANNELS 2

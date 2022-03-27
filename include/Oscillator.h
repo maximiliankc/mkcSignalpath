@@ -1,7 +1,7 @@
-#ifndef OSCILLATOR_HPP
-#define OSCILLATOR_HPP
+#ifndef OSCILLATOR_H
+#define OSCILLATOR_H
 
-#include "CircularBuffer.hpp"
+#include "CircularBuffer.h"
 #define OSC_CHANNELS 2
 #define OSC_MEMORY 2
 

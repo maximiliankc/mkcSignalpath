@@ -1,4 +1,4 @@
-#include "CircularBuffer.hpp"
+#include "CircularBuffer.h"
 
 
 void circular_buffer_init(CircularBuffer * self, unsigned int _length, float * _buffer) {

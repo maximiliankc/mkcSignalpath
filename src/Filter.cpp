@@ -1,4 +1,4 @@
-#include "Filter.hpp"
+#include "Filter.h"
 
 
 void filter_init(Filter * self, unsigned int c, CircularBuffer * in, CircularBuffer * out, unsigned int _aLen, float * _a, unsigned int _bLen, float * _b) {

@@ -8,7 +8,7 @@ TEST_TARGET=test
 _OBJ = CircularBuffer.o SoundPath.o Delay.o Filter.o Oscillator.o
 OBJ = $(patsubst %,$(ODIR)/%,$(_OBJ))
 
-_DEPS = CircularBuffer.hpp SoundPath.hpp Delay.hpp Filter.hpp Oscillator.hpp
+_DEPS = CircularBuffer.h SoundPath.h Delay.h Filter.h Oscillator.h
 DEPS = $(patsubst %,$(IDIR)/%,$(_DEPS))
 
 ODIR=obj

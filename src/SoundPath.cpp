@@ -1,5 +1,5 @@
 
-#include "SoundPath.hpp"
+#include "SoundPath.h"
 
 void soundpath_init(SoundPath * self) {
     // initialise sound units

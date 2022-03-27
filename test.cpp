@@ -1,8 +1,8 @@
 #include <stdio.h>
-#include "CircularBuffer.hpp"
-#include "Delay.hpp"
-#include "Filter.hpp"
-#include "Oscillator.hpp"
+#include "CircularBuffer.h"
+#include "Delay.h"
+#include "Filter.h"
+#include "Oscillator.h"
 
 #define DELAY_TEST_LENGTH 15
 #define TEST_DELAY 15

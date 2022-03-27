@@ -1,7 +1,7 @@
-#ifndef DELAY_HPP
-#define DELAY_HPP
+#ifndef DELAY_H
+#define DELAY_H
 
-#include "CircularBuffer.hpp"
+#include "CircularBuffer.h"
 
 typedef struct _SimpleDelay {
     int n;

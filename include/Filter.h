@@ -1,7 +1,7 @@
-#ifndef FILTER_HPP
-#define FILTER_HPP
+#ifndef FILTER_H
+#define FILTER_H
 
-#include "CircularBuffer.hpp"
+#include "CircularBuffer.h"
 
 // a[0]y[n] + ... + a[N]y[n-N] = b[0]x[0] + ... + b[M]x[n-M]
 // y[n] = (b[0]x[0] + ... + b[M]x[n-M] - (a[1]y[n-1] + ... + a[N]y[n-N]))/a[0]

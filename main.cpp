@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-#include "SoundPath.hpp"
+#include "SoundPath.h"
 
 // should read/print an audio file in [channels, len, fs, [channel 1 in PCM float [0,1]], ... , [channel n in PCM float [0,1]]]
 
