@@ -239,11 +239,12 @@ int test_oscillator(void) {
         circular_buffer_init(&in[i], 1, inMemory[i]);
         circular_buffer_init(&out[i], OSC_MEMORY, outMemory[i]);
     }
-    Oscillator osc(in, out, 0.5);
+    Oscillator osc;
+    osc_init(&osc, in, out, 0.5);
 
     circular_buffer_next(&in[0], 1);
     for(i = 0; i < 10; i++) {
-        osc.step();
+        osc_step(&osc);
         circular_buffer_next(&in[0], 0);
         if (i%2) {
             // if odd, output should be 1
@@ -268,11 +269,11 @@ int test_oscillator(void) {
         }
     }
 
-    osc.stop();
+    osc_stop(&osc);
     
     circular_buffer_next(&in[1], 1);
     for(i = 0; i < 10; i++) {
-        osc.step();
+        osc_step(&osc);
         circular_buffer_next(&in[1], 0);
         if (i%2) {
             // if odd, output should be 1

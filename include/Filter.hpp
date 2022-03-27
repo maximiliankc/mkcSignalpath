@@ -1,3 +1,6 @@
+#ifndef FILTER_HPP
+#define FILTER_HPP
+
 #include "SoundUnit.hpp"
 
 // a[0]y[n] + ... + a[N]y[n-N] = b[0]x[0] + ... + b[M]x[n-M]
@@ -16,3 +19,5 @@ struct Filter{
 
 void filter_init(Filter * self, unsigned int c, CircularBuffer * in, CircularBuffer * out, unsigned int _aLen, float * _a, unsigned int _bLen, float * _b);
 void filter_step(Filter * self);
+
+#endif
