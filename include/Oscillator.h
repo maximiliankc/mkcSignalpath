@@ -6,7 +6,7 @@
 #define OSC_MEMORY 2
 
 // Two channels in and out, only control over phase/magnitude is through starting impulse
-typedef struct _Oscillator {
+typedef struct Oscillator {
     CircularBuffer * x;
     CircularBuffer * y;
     float c;

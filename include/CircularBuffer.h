@@ -4,7 +4,7 @@
 // a pretty simple Circular buffer, with a float at its core
 // the intended use is to look back in time, not forward, and functions are defined as such
 
-typedef struct _CircularBuffer {
+typedef struct CircularBuffer {
     unsigned int current;
     unsigned int length;
     float * buffer;

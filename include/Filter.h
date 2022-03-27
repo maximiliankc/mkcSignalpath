@@ -7,7 +7,7 @@
 // y[n] = (b[0]x[0] + ... + b[M]x[n-M] - (a[1]y[n-1] + ... + a[N]y[n-N]))/a[0]
 // H(z) = (b[0]z^-0 + ... + b[0]z^-M)/(a[0]z^-0 + ... + a[M]z^-N) 
 
-typedef struct _Filter{
+typedef struct Filter{
     CircularBuffer * x;
     CircularBuffer * y;
     unsigned int channels;

@@ -3,7 +3,7 @@
 
 #include "CircularBuffer.h"
 
-typedef struct _SimpleDelay {
+typedef struct SimpleDelay {
     int n;
     CircularBuffer * x;
     CircularBuffer * y;

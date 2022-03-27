@@ -15,7 +15,7 @@
 
 #define SOUND_UNITS 2
 
-typedef struct _SoundPath {
+typedef struct SoundPath {
     float x[IN_CHANNELS];
     float y[OUT_CHANNELS];
 
