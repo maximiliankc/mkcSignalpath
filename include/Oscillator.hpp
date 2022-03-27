@@ -1,7 +1,7 @@
 #ifndef OSCILLATOR_HPP
 #define OSCILLATOR_HPP
 
-#include "SoundUnit.hpp"
+#include "CircularBuffer.hpp"
 #define OSC_CHANNELS 2
 #define OSC_MEMORY 2
 

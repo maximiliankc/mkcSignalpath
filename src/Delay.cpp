@@ -1,5 +1,4 @@
 #include "Delay.hpp"
-#include <iostream>
 
 
 void delay_init(SimpleDelay * self, int _n, unsigned int c, CircularBuffer * in, CircularBuffer * out) {
