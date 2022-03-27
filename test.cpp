@@ -180,16 +180,16 @@ int test_filter(void) {
         circular_buffer_init(&out[i], IIR_LENGTH, outMemory[i]);
     }
 
-
     // configure as a fir filter
-    DFIFilter filter(FILTER_CHANNELS, in, out, 1, fira, FIR_LENGTH, b);
+    Filter filter;
+    filter_init(&filter, FILTER_CHANNELS, in, out, 1, fira, FIR_LENGTH, b);
     // test fir filter
 
     circular_buffer_next(&in[0], 1);
     circular_buffer_next(&in[1], 2);
 
     for(i = 0; i < FIR_LENGTH; i++) {
-        filter.step();
+        filter_step(&filter);
         if (circular_buffer_now(&out[0], 0) != b[i]) {
             return 1;
         }
@@ -199,17 +199,19 @@ int test_filter(void) {
         circular_buffer_next(&in[0], 0);
         circular_buffer_next(&in[1], 0);
     }
-    filter.step(); // clearing the last value
+    filter_step(&filter); // clearing the last value
 
     // configure as an iir filter
-    filter.updateDenominator(IIR_LENGTH, a);
-    filter.updateNumerator(1, iirb);
+    filter.aLen = IIR_LENGTH;
+    filter.a = a;
+    filter.bLen = 1;
+    filter.b = iirb;
 
     circular_buffer_next(&in[0], 1);
     circular_buffer_next(&in[1], 2);
     float check = 1;
     for(i = 0; i < IIR_TEST_LENGTH; i++) {
-        filter.step();
+        filter_step(&filter);
         if (circular_buffer_now(&out[0], 0) != check) {
             return 1;
         }

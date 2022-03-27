@@ -17,9 +17,7 @@ SoundPath::SoundPath() {
     b[0] = 0.5;
     b[1] = 0;
     b[2] = 0;
-    filter.init(DELAY_CHANNELS, filterIn, filterOut, FILTER_LENGTH, a, FILTER_LENGTH, b);
-    Units[1] = &filter;
-
+    filter_init(&filter, DELAY_CHANNELS, filterIn, filterOut, FILTER_LENGTH, a, FILTER_LENGTH, b);
 
     // set up delay
     for(i = 0; i < DELAY_CHANNELS; i++) {
@@ -40,15 +38,12 @@ void SoundPath::step(void) {
     }
 
     // run all the sound path elements
-    for(i = 0; i < SOUND_UNITS; i++) {
-        Units[i]->step();
-    }
-    // 
     delay_step(&delay);
-    filter.step();
+    filter_step(&filter);
+
     // fill the output buffer with the outputs of the final block
     for(i = 0; i < OUT_CHANNELS; i++) {
-        y[i] =circular_buffer_now(&(filter.get_y()[i]), 0);
+        y[i] = circular_buffer_now(&(filter.y[i]), 0);
     }
 }
 

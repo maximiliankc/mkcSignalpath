@@ -18,7 +18,6 @@
 class SoundPath {
     float x[IN_CHANNELS];
     float y[OUT_CHANNELS];
-    SoundUnit * Units[SOUND_UNITS];
 
     // this is where the sound units and their memory is setup
 
@@ -40,7 +39,7 @@ class SoundPath {
     float a[FILTER_LENGTH];
     float b[FILTER_LENGTH];
     // unit
-    DFIFilter filter;
+    Filter filter;
     
 
     public:
