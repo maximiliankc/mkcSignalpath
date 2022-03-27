@@ -1,5 +1,5 @@
 IDIR = ./include
-CC=g++
+CC=gcc
 CFLAGS=-I$(IDIR) -Werror -Wall
 
 LINK_TARGET=signal
@@ -19,16 +19,16 @@ all: $(LINK_TARGET) $(TEST_TARGET)
 $(LINK_TARGET): $(OBJ) $(ODIR)/main.o
 	$(CC) -o $@ $^ $(CFLAGS)
 
-$(ODIR)/main.o: main.cpp $(DEPS)
+$(ODIR)/main.o: main.c $(DEPS)
 	$(CC) -o $@ -c $< $(CFLAGS)
 
 $(TEST_TARGET): $(OBJ) $(ODIR)/test.o
 	$(CC) -o $@ $^ $(CFLAGS)
 
-$(ODIR)/test.o: test.cpp $(DEPS)
+$(ODIR)/test.o: test.c $(DEPS)
 	$(CC) -o $@ -c $< $(CFLAGS)
 
-$(ODIR)/%.o : $(SRCDIR)/%.cpp $(DEPS)
+$(ODIR)/%.o : $(SRCDIR)/%.c $(DEPS)
 	$(CC) -o $@ -c $< $(CFLAGS)
 
 clean:

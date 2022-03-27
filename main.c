@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 
 #include "SoundPath.h"
 
@@ -37,13 +38,13 @@ int main(int argc, char** argv){
         return 1;
     }
 
-    soundIn = new float*[channels];
-    soundOut = new float*[channels];
+    soundIn = (float **)malloc(channels*sizeof(float*));
+    soundOut = (float **)malloc(channels*sizeof(float*));
 
     // populate the list of channels
     for(i=0; i < channels; i++) {
-        soundIn[i] = new float[length];
-        soundOut[i] = new float[length];
+        soundIn[i] = (float *)malloc(length*sizeof(float));
+        soundOut[i] = (float *)malloc(length*sizeof(float));
         for(j=0; j < length; j++) {
             if(!scanf("%g", &input)) {
                 return 1;
@@ -72,11 +73,11 @@ int main(int argc, char** argv){
            printf("%g ", soundOut[i][j]);
         }
         // delete the array
-        delete[] soundIn[i];
-        delete[] soundOut[i];
+        free(soundIn[i]);
+        free(soundOut[i]);
     }
-    delete[] soundIn;
-    delete[] soundOut;
+    free(soundIn);
+    free(soundOut);
 
     return 0;
 }
