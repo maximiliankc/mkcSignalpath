@@ -18,9 +18,11 @@ int main(int argc, char** argv){
     float * in;
     float * out;
 
+    soundpath_init(&soundPath);
+
     //point in and out to the right spots
-    in = soundPath.getX();
-    out = soundPath.getY();
+    in = soundPath.x;
+    out = soundPath.y;
 
     // extract the sampling frequency, length, channels
     if(!scanf("%d", &channels)) {
@@ -54,7 +56,7 @@ int main(int argc, char** argv){
         for(i = 0; i < channels; i++) {
             in[i] = soundIn[i][j];
         }
-        soundPath.step();
+        soundpath_step(&soundPath);
         for(i = 0; i < channels; i++) {
             soundOut[i][j] = out[i];
         }

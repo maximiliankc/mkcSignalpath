@@ -15,7 +15,7 @@
 
 #define SOUND_UNITS 2
 
-class SoundPath {
+struct SoundPath {
     float x[IN_CHANNELS];
     float y[OUT_CHANNELS];
 
@@ -40,14 +40,10 @@ class SoundPath {
     float b[FILTER_LENGTH];
     // unit
     Filter filter;
-    
-
-    public:
-    SoundPath();
-    void step(void);
-    float * getX(void);
-    float * getY(void);
-
 };
+
+void soundpath_init(SoundPath * self);
+void soundpath_step(SoundPath * self);
+
 
 #endif
