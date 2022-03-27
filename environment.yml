@@ -6,4 +6,4 @@ dependencies:
   - scipy
   - matplotlib
   - python=3.*
-  - pylint
+  - flake8
