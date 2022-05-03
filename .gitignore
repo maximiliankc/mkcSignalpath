@@ -1,6 +1,7 @@
 .vscode/
 obj/
 *.o
+*.so
 *.pyc
 signal
 test
