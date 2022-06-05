@@ -1,17 +1,17 @@
 #include "SoundPath.h"
+#include <stdio.h>
 
+void run(int samples, float * in1, float * in2, float * out1, float * out2);
 
-void run(int samples, float ** in, float ** out);
-
-void run(int samples, float ** in, float ** out) {
-    int m;
+void run(int samples, float * in1, float * in2, float * out1, float * out2) {
     SoundPath soundpath;
 
     soundpath_init(&soundpath);
 
     for(int n=0; n < samples; n++) {
-        for(m=0; m < IN_CHANNELS; m++) {
-            out[m][n] = in[m][n];
-        }
+        out1[n] = in1[n];
+        out2[n] = in2[n];
+        printf("%g, %g\n", in1[n], in2[n]);
+        printf("%g, %g\n", out1[n], out2[n]);
     }
 }
