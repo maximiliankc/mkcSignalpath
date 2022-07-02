@@ -1,10 +1,10 @@
 import ctypes
 
 
-class Interface:
+class SoundInterface:
     ''' Class for interfacing with interface.so'''
-    def __init__(self):
-        library = ctypes.CDLL('interface.so')
+    def __init__(self, interface_object='interface.so'):
+        library = ctypes.CDLL(interface_object)
         self.interface = library.run
 
     def run(self, input: list):
@@ -27,7 +27,7 @@ class Interface:
 def main():
     c1 = [1, 2, 3, 4, 5]
     c2 = [4, 5, 6, 7, 8]
-    interface = Interface()
+    interface = SoundInterface()
     out = interface.run([c1, c2])
     print(out)
 

@@ -8,10 +8,11 @@ void run(int samples, float * in1, float * in2, float * out1, float * out2) {
 
     soundpath_init(&soundpath);
 
-    for(int n=0; n < samples; n++) {
-        out1[n] = in1[n];
-        out2[n] = in2[n];
-        printf("%g, %g\n", in1[n], in2[n]);
-        printf("%g, %g\n", out1[n], out2[n]);
+    for(int n=1; n < samples; n++) {
+        soundpath.x[0] = in1[n];
+        soundpath.x[1] = in2[n];
+        soundpath_step(&soundpath);
+        out1[n] = soundpath.y[0];
+        out2[n] = soundpath.y[1];
     }
 }
